@@ -9,7 +9,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
-mongoose.connect('mongodb://localhost/local-authentication-with-passport');
+
+mongoose.connect('mongodb://127.0.0.1/local-authentication-with-passport');
 
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -26,6 +27,11 @@ app.use(passport.session());
 app.use(flash());
 
 require('./config/passport')(passport);
+
+app.use(function (req, res, next) {
+  global.user = req.user;
+  next();
+});
 
 var routes = require('./config/routes');
 app.use(routes);
